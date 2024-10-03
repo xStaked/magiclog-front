@@ -1,6 +1,5 @@
-import React from "react";
+import RegisterForm from "@/components/auth/RegisterForm";
 import { Metadata } from "next";
-import LoginForm from "@/components/auth/LoginForm";
 import {
   Card,
   CardContent,
@@ -9,37 +8,33 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import React from "react";
 export const metadata: Metadata = {
-  title: "Sign In",
+  title: "Register",
 };
-
-export default function Page() {
+export default async function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-4">
       <div className="w-full max-w-md space-y-8">
-        <header className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+        <section className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <h1 className="text-3xl font-bold text-gray-800 text-center sm:text-right sm:max-w-[8rem]">
-            Sign In Marketplace
+            Join Marketplace
           </h1>
-        </header>
+        </section>
 
         <Card className="w-full shadow-lg">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">
-              Sign in
+              Create an Account
             </CardTitle>
             <CardDescription className="text-center">
-              Enter your email and password to sign in
+              Enter your details to register
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <LoginForm />
+            <RegisterForm />
           </CardContent>
         </Card>
-
-        <footer className="text-center text-sm text-gray-600 mt-8">
-          <p>&copy; 2024 Marketplace. All rights reserved.</p>
-        </footer>
       </div>
     </div>
   );

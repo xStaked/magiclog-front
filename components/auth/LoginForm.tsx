@@ -16,12 +16,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { loginSchema } from "@/lib/login.schema";
+import { loginSchema } from "@/lib/schemas/login.schema";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function Component() {
-  const { handleSubmit, isLoading } = useAuth();
+  const { handleLogin, isLoading } = useAuth();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -33,7 +33,7 @@ export default function Component() {
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     console.log(values);
-    await handleSubmit(values.email, values.password);
+    await handleLogin(values.email, values.password);
   };
 
   return (

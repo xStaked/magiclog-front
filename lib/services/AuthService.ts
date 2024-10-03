@@ -31,4 +31,37 @@ export class AuthService implements IAuthService {
       throw error;
     }
   }
+
+  async register(
+    username: string,
+    email: string,
+    password: string,
+    role?: string
+  ) {
+    try {
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password, role }),
+      });
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const data = await response.json();
+      console.log("data", data);
+      return data;
+    } catch (error) {
+      if (!(error as AuthError).message) {
+        const authError: AuthError = {
+          message: "An unexpected error occurred",
+        };
+        throw authError;
+      }
+      throw error;
+    }
+  }
 }
