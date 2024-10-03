@@ -9,7 +9,7 @@ export const loginSchema = z.object({
     .max(254),
   password: z
     .string()
-    .min(8, {
+    .min(6, {
       message: "Password must be at least 8 characters long.",
     })
     .max(254),

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -19,9 +18,10 @@ import { Input } from "@/components/ui/input";
 
 import { loginSchema } from "@/lib/login.schema";
 import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Component() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { handleSubmit, isLoading } = useAuth();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -31,14 +31,10 @@ export default function Component() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      console.log(values);
-      setIsLoading(false);
-    }, 2000);
-  }
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    console.log(values);
+    await handleSubmit(values.email, values.password);
+  };
 
   return (
     <Form {...form}>
