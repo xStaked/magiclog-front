@@ -11,6 +11,10 @@ export interface IProductService {
     offset: number,
     limit: number
   ): Promise<GetUserProductsResponse>;
+  getAllProducts(
+    offset: number,
+    limit: number
+  ): Promise<GetUserProductsResponse>;
 }
 
 export class ProductService implements IProductService {
@@ -65,6 +69,35 @@ export class ProductService implements IProductService {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const products = await response.json();
+      console.log("data", products);
+      return products;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getAllProducts(
+    offset: number,
+    limit: number
+  ): Promise<GetUserProductsResponse> {
+    try {
+      // await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const response = await fetch(
+        `http://localhost:3000/products?limit=${limit}&offset=${offset}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
           },
         }
       );

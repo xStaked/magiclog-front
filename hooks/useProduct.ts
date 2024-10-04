@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 export const useProduct = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [products, setProducts] = React.useState<Product[]>([]);
 
   const productService = new ProductService();
 
@@ -29,9 +30,30 @@ export const useProduct = () => {
   const getUserProducts = async (limit: number, offset: number) => {
     setIsLoading(true);
     try {
-      const resp:GetUserProductsResponse = await productService.getSellerProducts(limit, offset);
+      const resp: GetUserProductsResponse =
+        await productService.getSellerProducts(limit, offset);
+      setProducts(resp.result);
+      console.log(resp);
+      return resp;
+    } catch (err) {
+      console.log("err", err);
+      const productError = err as HttpError;
+      toast.error(productError.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getAllProducts = async (limit: number, offset: number) => {
+    setIsLoading(true);
+    try {
+      const resp: GetUserProductsResponse = await productService.getAllProducts(
+        limit,
+        offset
+      );
 
       console.log(resp);
+      setProducts(resp.result);
       return resp;
     } catch (err) {
       console.log("err", err);
@@ -45,6 +67,8 @@ export const useProduct = () => {
   return {
     hanldeCreateProduct,
     getUserProducts,
+    getAllProducts,
     isLoading,
+    products
   };
 };

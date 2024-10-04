@@ -1,17 +1,10 @@
-export interface Product {
-  name: string;
-  sku: string;
-  quantity: number;
-  price: number;
-}
-
 export interface AddProductResponse {
   status: number;
   message: string;
-  result: Result;
+  result: Product;
 }
 
-export interface Result {
+export interface Product {
   id: number;
   name: string;
   sku: string;
@@ -22,5 +15,5 @@ export interface Result {
 export interface GetUserProductsResponse {
   staus: number;
   message: string;
-  result: Result[];
+  result: Product[];
 }
