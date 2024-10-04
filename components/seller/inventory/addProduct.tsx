@@ -1,4 +1,11 @@
+"use client";
+
 import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Loader2 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,43 +14,52 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
-interface Product {
-  name: string;
-  sku: string;
-  quantity: number;
-  price: number;
-}
+const productSchema = z.object({
+  name: z.string().min(1, "Product name is required"),
+  sku: z.string().min(1, "SKU is required"),
+  quantity: z.number().int().positive("Quantity must be a positive integer"),
+  price: z.number().positive("Price must be a positive number"),
+});
+
+type ProductFormValues = z.infer<typeof productSchema>;
 
 interface AddProductModalProps {
-  onAddProduct: (product: Product) => void;
+  onAddProduct: (product: ProductFormValues) => void;
+  isLoading: boolean;
 }
 
-export function AddProductModal({ onAddProduct }: AddProductModalProps) {
+export function AddProductModal({
+  onAddProduct,
+  isLoading,
+}: AddProductModalProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [newProduct, setNewProduct] = useState<Product>({
-    name: "",
-    sku: "",
-    quantity: 0,
-    price: 0,
+
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: "",
+      sku: "",
+      quantity: 0,
+      price: 0,
+    },
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewProduct((prev) => ({
-      ...prev,
-      [name]: name === "quantity" || name === "price" ? Number(value) : value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onAddProduct(newProduct);
-    setNewProduct({ name: "", sku: "", quantity: 0, price: 0 });
+  function onSubmit(values: ProductFormValues) {
+    onAddProduct(values);
+    isLoading = true;
+    form.reset();
     setIsOpen(false);
-  };
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -54,52 +70,87 @@ export function AddProductModal({ onAddProduct }: AddProductModalProps) {
         <DialogHeader>
           <DialogTitle>Add New Product</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
               name="name"
-              value={newProduct.name}
-              onChange={handleInputChange}
-              required
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Product name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div>
-            <Label htmlFor="sku">SKU</Label>
-            <Input
-              id="sku"
+            <FormField
+              control={form.control}
               name="sku"
-              value={newProduct.sku}
-              onChange={handleInputChange}
-              required
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>SKU</FormLabel>
+                  <FormControl>
+                    <Input placeholder="SKU" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div>
-            <Label htmlFor="quantity">Quantity</Label>
-            <Input
-              id="quantity"
+            <FormField
+              control={form.control}
               name="quantity"
-              type="number"
-              value={newProduct.quantity}
-              onChange={handleInputChange}
-              required
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Quantity</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Quantity"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(parseInt(e.target.value, 10))
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div>
-            <Label htmlFor="price">Price</Label>
-            <Input
-              id="price"
+            <FormField
+              control={form.control}
               name="price"
-              type="number"
-              step="0.01"
-              value={newProduct.price}
-              onChange={handleInputChange}
-              required
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      placeholder="Price"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(parseFloat(e.target.value))
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <Button type="submit">Add Product</Button>
-        </form>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {!isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating product...
+                </>
+              ) : (
+                "Add Product"
+              )}
+            </Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
