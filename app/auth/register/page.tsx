@@ -35,6 +35,9 @@ export default async function RegisterPage() {
             <RegisterForm />
           </CardContent>
         </Card>
+        <footer className="text-center text-sm text-gray-600 mt-8">
+          <p>&copy; 2024 Marketplace. All rights reserved.</p>
+        </footer>
       </div>
     </div>
   );
