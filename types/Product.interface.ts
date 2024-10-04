@@ -19,3 +19,8 @@ export interface Result {
   price: number;
   containerId: number;
 }
+export interface GetUserProductsResponse {
+  staus: number;
+  message: string;
+  result: Result[];
+}

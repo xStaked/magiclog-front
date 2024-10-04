@@ -1,8 +1,16 @@
-import { AddProductResponse, Product } from "@/types/Product.interface";
+import {
+  AddProductResponse,
+  GetUserProductsResponse,
+  Product,
+} from "@/types/Product.interface";
 import { getCookie } from "cookies-next";
 
 export interface IProductService {
   addProduct(product: Product): Promise<AddProductResponse>;
+  getSellerProducts(
+    offset: number,
+    limit: number
+  ): Promise<GetUserProductsResponse>;
 }
 
 export class ProductService implements IProductService {
@@ -33,13 +41,43 @@ export class ProductService implements IProductService {
       console.log("data", data);
       return data;
     } catch (error) {
-      //   if (!(error as AuthError).message) {
-      //     const authError: AuthError = {
-      //       message: "An unexpected error occurred",
-      //     };
-      //     throw authError;
-      //   }
+      // if (!(error as AuthError).message) {
+      //   const authError: AuthError = {
+      //     message: "An unexpected error occurred",
+      //   };
+      //   throw authError;
+      // }
       throw error;
+    }
+  }
+
+  async getSellerProducts(
+    offset: number,
+    limit: number
+  ): Promise<GetUserProductsResponse> {
+    try {
+      const token = getCookie("marketPlaceToken");
+
+      const response = await fetch(
+        `http://localhost:3000/products/user?limit=${limit}&offset=${offset}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const products = await response.json();
+      console.log("data", products);
+      return products;
+    } catch (err) {
+      throw err;
     }
   }
 }

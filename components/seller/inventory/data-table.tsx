@@ -15,6 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useProduct } from "@/hooks/useProduct";
 
 interface Product {
   id: number;
@@ -29,20 +30,16 @@ export function ProductTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const { getUserProducts } = useProduct();
+
   useEffect(() => {
     const fetchProducts = async () => {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // Mock data
-      const mockProducts: Product[] = Array.from({ length: 50 }, (_, i) => ({
-        id: i + 1,
-        name: `Product ${i + 1}`,
-        sku: `SKU${i + 1}`,
-        quantity: Math.floor(Math.random() * 100),
-        price: Math.random() * 1000,
-      }));
-      setProducts(mockProducts.slice((currentPage - 1) * 10, currentPage * 10));
-      setTotalPages(Math.ceil(mockProducts.length / 10));
+      const userProducts = await getUserProducts(0, 10);
+      console.log(userProducts);
+      if (userProducts) {
+        setProducts(userProducts?.result);
+        setTotalPages(Math.ceil(userProducts?.result.length / 10));
+      }
     };
 
     fetchProducts();
@@ -60,14 +57,15 @@ export function ProductTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {products.map((product) => (
-            <TableRow key={product.id}>
-              <TableCell>{product.name}</TableCell>
-              <TableCell>{product.sku}</TableCell>
-              <TableCell>{product.quantity}</TableCell>
-              <TableCell>${product.price.toFixed(2)}</TableCell>
-            </TableRow>
-          ))}
+          {products &&
+            products.map((product) => (
+              <TableRow key={product.id}>
+                <TableCell>{product.name}</TableCell>
+                <TableCell>{product.sku}</TableCell>
+                <TableCell>{product.quantity}</TableCell>
+                <TableCell>${product.price.toFixed(2)}</TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
 
@@ -76,7 +74,7 @@ export function ProductTable() {
           <PaginationItem>
             <PaginationPrevious
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            //   disabled={currentPage === 1}
+              //   disabled={currentPage === 1}
             />
           </PaginationItem>
           {[...Array(totalPages)].map((_, index) => (
@@ -94,7 +92,7 @@ export function ProductTable() {
               onClick={() =>
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
-            //   disabled={currentPage === totalPages}
+              //   disabled={currentPage === totalPages}
             />
           </PaginationItem>
         </PaginationContent>
