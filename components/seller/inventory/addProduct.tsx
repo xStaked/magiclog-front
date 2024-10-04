@@ -54,12 +54,11 @@ export function AddProductModal({
     },
   });
 
-  function onSubmit(values: ProductFormValues) {
+  const onSubmit = async (values: ProductFormValues) => {
     onAddProduct(values);
-    isLoading = true;
     form.reset();
     setIsOpen(false);
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -140,7 +139,7 @@ export function AddProductModal({
               )}
             />
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {!isLoading ? (
+              {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Creating product...

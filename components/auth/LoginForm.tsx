@@ -19,9 +19,11 @@ import { Input } from "@/components/ui/input";
 import { loginSchema } from "@/lib/schemas/login.schema";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 export default function Component() {
   const { handleLogin, isLoading } = useAuth();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -34,6 +36,7 @@ export default function Component() {
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     console.log(values);
     await handleLogin(values.email, values.password);
+    router.push("/seller/inventory");
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AuthService } from "@/lib/services/AuthService";
-import { AuthError } from "@/types/AuthError.interface";
+import { HttpError } from "@/types/HttpError.interface";
 import { setCookie } from "cookies-next";
 import toast from "react-hot-toast";
 
@@ -23,7 +23,7 @@ export const useAuth = () => {
       });
       toast.success("Successfully logged in!");
     } catch (err) {
-      const authError = err as AuthError;
+      const authError = err as HttpError;
       toast.error(authError.message);
       // setError(authError);
     } finally {
@@ -49,7 +49,7 @@ export const useAuth = () => {
 
       toast.success("User has been register successfully!");
     } catch (err) {
-      const authError = err as AuthError;
+      const authError = err as HttpError;
       toast.error(authError.message);
       // setError(authError);
     } finally {

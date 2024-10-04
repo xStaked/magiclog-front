@@ -1,7 +1,13 @@
-import { AuthError } from "@/types/AuthError.interface";
+import { HttpError } from "@/types/HttpError.interface";
+import { RegisterResponse } from "@/types/Register-response.interface";
 
 export interface IAuthService {
   login(email: string, password: string): Promise<string>;
+  register(
+    username: string,
+    email: string,
+    password: string
+  ): Promise<RegisterResponse>;
 }
 
 export class AuthService implements IAuthService {
@@ -22,8 +28,8 @@ export class AuthService implements IAuthService {
       const data = await response.json();
       return data.token.token;
     } catch (error) {
-      if (!(error as AuthError).message) {
-        const authError: AuthError = {
+      if (!(error as HttpError).message) {
+        const authError: HttpError = {
           message: "An unexpected error occurred",
         };
         throw authError;
@@ -32,19 +38,14 @@ export class AuthService implements IAuthService {
     }
   }
 
-  async register(
-    username: string,
-    email: string,
-    password: string,
-    role?: string
-  ) {
+  async register(username: string, email: string, password: string) {
     try {
       const response = await fetch("http://localhost:3000/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, email, password, role }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       if (!response.ok) {
@@ -55,8 +56,8 @@ export class AuthService implements IAuthService {
       console.log("data", data);
       return data;
     } catch (error) {
-      if (!(error as AuthError).message) {
-        const authError: AuthError = {
+      if (!(error as HttpError).message) {
+        const authError: HttpError = {
           message: "An unexpected error occurred",
         };
         throw authError;

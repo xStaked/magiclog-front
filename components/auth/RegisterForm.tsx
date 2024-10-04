@@ -18,9 +18,11 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { registerSchema } from "@/lib/schemas/register.schema";
 import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const { handleRegister, isLoading } = useAuth();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -35,6 +37,7 @@ export default function RegisterForm() {
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
     console.log(values);
     await handleRegister(values.username, values.email, values.password);
+    router.push("/seller/inventory");
   };
 
   return (

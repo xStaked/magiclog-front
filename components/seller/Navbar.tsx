@@ -9,19 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import { LogOut } from "@/lib/logout";
 
 export function Navbar() {
   const router = useRouter();
 
-  const handleLogout = () => {
-    // Todo implement logout with redux
-    deleteCookie("marketPlaceToken", {
-      path: "/",
-    });
-    router.push("/");
-  };
+  const handleLogout = async () => LogOut(router);
 
   return (
     <nav className="bg-background border-b">
