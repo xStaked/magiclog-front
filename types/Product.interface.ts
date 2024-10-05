@@ -15,7 +15,11 @@ export interface Product {
 export interface GetUserProductsResponse {
   staus: number;
   message: string;
-  result: Product[];
+  result: {
+    products: Product[];
+    totalPages: number;
+    totalProducts: number;
+  };
 }
 export interface ProductAdminResponse {
   staus: number;

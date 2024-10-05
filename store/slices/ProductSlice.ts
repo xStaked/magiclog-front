@@ -12,6 +12,8 @@ import { AdminProduct } from "../../types/Product.interface";
 interface ProductState {
   isLoading: boolean;
   products: (Product | AdminProduct)[];
+  totalPages: number;
+  totalProducts: number;
   error: string | null;
   searchFilter: string;
   priceRange: number[];
@@ -20,6 +22,8 @@ interface ProductState {
 
 const initialState: ProductState = {
   products: [],
+  totalPages: 1,
+  totalProducts: 0,
   isLoading: false,
   error: null,
   searchFilter: "",
@@ -54,7 +58,7 @@ export const getUserProducts = createAsyncThunk(
     try {
       const response: GetUserProductsResponse =
         await productService.getSellerProducts(limit, offset);
-      return response.result;
+      return response;
     } catch (err) {
       const productError = err as HttpError;
       toast.error(productError.message);
@@ -72,7 +76,7 @@ export const getAllProducts = createAsyncThunk(
     try {
       const response: GetUserProductsResponse =
         await productService.getAllProducts(limit, offset);
-      return response.result;
+      return response;
     } catch (err) {
       const productError = err as HttpError;
       toast.error(productError.message);
@@ -149,9 +153,11 @@ const productSlice = createSlice({
     });
     builder.addCase(
       getAllProducts.fulfilled,
-      (state, action: PayloadAction<Product[]>) => {
+      (state, action: PayloadAction<GetUserProductsResponse>) => {
         state.isLoading = false;
-        state.products = action.payload;
+        state.totalPages = action.payload.result.totalPages;
+        state.totalProducts = action.payload.result.totalProducts;
+        state.products = action.payload.result.products;
       }
     );
     builder.addCase(getAllProducts.rejected, (state) => {
@@ -165,6 +171,7 @@ const productSlice = createSlice({
       getAdminProducts.fulfilled,
       (state, action: PayloadAction<Product[]>) => {
         state.isLoading = false;
+
         state.products = action.payload;
       }
     );
