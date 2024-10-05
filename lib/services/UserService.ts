@@ -1,6 +1,7 @@
 import { HttpError } from "@/types/HttpError.interface";
 import { UsersResponse } from "@/types/Users.interface";
 import { getCookie } from "cookies-next";
+import { API_URL } from "../constants";
 
 export interface IUserService {
   getSellers(): Promise<UsersResponse>;
@@ -11,14 +12,11 @@ export class UserService implements IUserService {
     try {
       const token = getCookie("marketPlaceToken");
 
-      const response = await fetch(
-        "http://localhost:3000/users/by-role?role=seller",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/users/by-role?role=seller`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const sellers = response.json();
 

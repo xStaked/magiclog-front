@@ -53,14 +53,18 @@ export default function Home() {
   return (
     <section className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <Navbar />
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex justify-between">
-            <h1 className="text-3xl font-bold mb-8"> Marketplace Products</h1>
-            <Link href="/cart">
-              <span className=" underline ">Go to cart</span>
-            </Link>
+
+      <section className="min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+        <div className="container mx-auto">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex justify-between items-center">
+              <h1 className="text-3xl font-bold mb-8">Marketplace Products</h1>
+              <Link href="/cart">
+                <span className="underline">Go to cart</span>
+              </Link>
+            </div>
           </div>
+
           <FilterSection />
           <Suspense>
             <ProductList products={products} isLoading={isLoading} />
@@ -71,7 +75,7 @@ export default function Home() {
             />
           </Suspense>
         </div>
-      </main>
+      </section>
     </section>
   );
 }

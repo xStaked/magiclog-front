@@ -4,6 +4,7 @@ import {
   Product,
 } from "@/types/Product.interface";
 import { getCookie } from "cookies-next";
+import { API_URL } from "../constants";
 
 export interface IProductService {
   addProduct(product: Product): Promise<AddProductResponse>;
@@ -27,7 +28,7 @@ export class ProductService implements IProductService {
       const token = getCookie("marketPlaceToken");
       console.log("token cookie", token);
 
-      const response = await fetch("http://localhost:3000/products", {
+      const response = await fetch(`${API_URL}/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,9 +68,8 @@ export class ProductService implements IProductService {
       const token = getCookie("marketPlaceToken");
       // await new Promise(resolve => setTimeout(resolve, 10000));
 
-
       const response = await fetch(
-        `http://localhost:3000/products/user?limit=${limit}&offset=${offset}`,
+        `${API_URL}/products/user?limit=${limit}&offset=${offset}`,
         {
           method: "GET",
           headers: {
@@ -99,7 +99,7 @@ export class ProductService implements IProductService {
       // await new Promise(resolve => setTimeout(resolve, 2000));
 
       const response = await fetch(
-        `http://localhost:3000/products?limit=${limit}&offset=${offset}`,
+        `${API_URL}/products?limit=${limit}&offset=${offset}`,
         {
           method: "GET",
           headers: {
@@ -129,7 +129,7 @@ export class ProductService implements IProductService {
       const token = getCookie("marketPlaceToken");
 
       const response = await fetch(
-        `http://localhost:3000/products/admin?limit=${limit}&offset=${offset}`,
+        `${API_URL}/admin?limit=${limit}&offset=${offset}`,
         {
           method: "GET",
           headers: {

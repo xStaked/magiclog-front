@@ -2,6 +2,7 @@ import { LoginResponse, ValidateSession } from "@/types/Auth.interface";
 import { HttpError } from "@/types/HttpError.interface";
 import { RegisterResponse } from "@/types/Register-response.interface";
 import { getCookie } from "cookies-next";
+import { API_URL } from "../constants";
 
 export interface IAuthService {
   login(email: string, password: string): Promise<LoginResponse>;
@@ -16,7 +17,8 @@ export interface IAuthService {
 export class AuthService implements IAuthService {
   async login(email: string, password: string): Promise<LoginResponse> {
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      // BACKEND_URL
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +27,7 @@ export class AuthService implements IAuthService {
       });
 
       if (!response.ok) {
-        console.log(response)
+        console.log(response);
         throw new Error(response.statusText);
       }
 
@@ -45,7 +47,7 @@ export class AuthService implements IAuthService {
 
   async register(username: string, email: string, password: string) {
     try {
-      const response = await fetch("http://localhost:3000/auth/register", {
+      const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +77,7 @@ export class AuthService implements IAuthService {
     try {
       const token = getCookie("marketPlaceToken");
 
-      const response = await fetch("http://localhost:3000/auth/validate", {
+      const response = await fetch(`${API_URL}/auth/validate`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
