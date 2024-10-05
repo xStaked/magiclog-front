@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { ProductService } from "@/lib/services/ProductService";
-import {
-  GetUserProductsResponse,
-  Product,
-} from "@/types/Product.interface";
+import { GetUserProductsResponse, Product } from "@/types/Product.interface";
 import { HttpError } from "@/types/HttpError.interface";
 import toast from "react-hot-toast";
 import { AdminProduct } from "../../types/Product.interface";
@@ -32,8 +29,7 @@ const initialState: ProductState = {
 
 const productService = new ProductService();
 
-// Thunks para las operaciones asíncronas
-export const hanldeCreateProduct = createAsyncThunk(
+export const createProduct = createAsyncThunk(
   "product/handleCreateProduct",
   async (product: Product, { rejectWithValue }) => {
     try {
@@ -125,13 +121,13 @@ const productSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Crear producto
-    builder.addCase(hanldeCreateProduct.pending, (state) => {
+    builder.addCase(createProduct.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(hanldeCreateProduct.fulfilled, (state) => {
+    builder.addCase(createProduct.fulfilled, (state) => {
       state.isLoading = false;
     });
-    builder.addCase(hanldeCreateProduct.rejected, (state) => {
+    builder.addCase(createProduct.rejected, (state) => {
       state.isLoading = false;
     });
 

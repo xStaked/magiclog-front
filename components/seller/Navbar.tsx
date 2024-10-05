@@ -9,13 +9,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
 import { LogOut } from "@/lib/logout";
 
 export function Navbar() {
-  const router = useRouter();
 
-  const handleLogout = async () => LogOut(router);
+  const handleLogout = async () => LogOut();
 
   return (
     <nav className="bg-background border-b">

@@ -29,7 +29,7 @@ interface Iprops {
 
 export default function Component({ setOpen }: Iprops) {
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, isAuthenticated } = useSelector(
+  const { isLoading, isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -48,7 +48,10 @@ export default function Component({ setOpen }: Iprops) {
       await dispatch(login({ email: values.email, password: values.password }));
 
       if (isAuthenticated) setOpen();
-      // router.push("/seller/inventory");
+
+      if (user?.role === "ADMIN") {
+        router.push("/admin/products");
+      }
     } catch (err) {
       console.log(err);
     }

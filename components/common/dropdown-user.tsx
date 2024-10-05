@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { LogOut } from "@/lib/logout";
-import { useRouter } from "next/navigation";
 import { User } from "@/types/Auth.interface";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
@@ -24,12 +23,11 @@ interface IProps {
 }
 
 const DropdownUser = ({ user }: IProps) => {
-  const router = useRouter();
 
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSignOut = async () => {
-    LogOut(router);
+    LogOut();
     dispatch(logout());
   };
 

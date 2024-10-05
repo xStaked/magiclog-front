@@ -34,7 +34,7 @@ export default function Home() {
 
     if (!paramsInUrl) {
       console.log("no params");
-      router.replace(`/?page=${defaultPage}&limit=${defaultLimit}`);
+      router.replace(`?page=${defaultPage}&limit=${defaultLimit}`);
     } else {
       const fetchUserProducts = (limit: number, page: number) => {
         const offset = (page - 1) * limit;
@@ -47,7 +47,7 @@ export default function Home() {
   }, [dispatch, currentPage, limit, router, searchParams]);
 
   const handlePageChange = (newPage: number) => {
-    router.push(`/?page=${newPage}&limit=${limit}`);
+    router.push(`?page=${newPage}&limit=${limit}`);
   };
 
   return (

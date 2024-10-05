@@ -23,6 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { createProduct } from "@/store/slices/ProductSlice";
+import { Product } from "@/types/Product.interface";
 
 const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
@@ -34,15 +38,13 @@ const productSchema = z.object({
 type ProductFormValues = z.infer<typeof productSchema>;
 
 interface AddProductModalProps {
-  onAddProduct: (product: ProductFormValues) => void;
   isLoading: boolean;
 }
 
-export function AddProductModal({
-  onAddProduct,
-  isLoading,
-}: AddProductModalProps) {
+export function AddProductModal({ isLoading }: AddProductModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -55,9 +57,16 @@ export function AddProductModal({
   });
 
   const onSubmit = async (values: ProductFormValues) => {
-    onAddProduct(values);
-    form.reset();
-    setIsOpen(false);
+    try {
+      const data = await dispatch(createProduct(values as Product));
+
+      if (data.meta.requestStatus !== "rejected") {
+        form.reset();
+        setIsOpen(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

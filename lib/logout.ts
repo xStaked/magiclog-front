@@ -1,4 +1,3 @@
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { deleteCookie } from "cookies-next";
 import { persistor } from "@/store/store";
 
@@ -7,8 +6,8 @@ export const deleteCookieApp = () =>
     path: "/",
   });
 
-export function LogOut(router: AppRouterInstance) {
+export function LogOut() {
   deleteCookieApp();
   persistor.purge();
-  router.push("/");
+  window.location.href = "?page=1&limit=12";
 }

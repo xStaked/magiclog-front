@@ -39,13 +39,19 @@ export const login = createAsyncThunk(
         credentials.email,
         credentials.password
       );
-      toast.success("Successfully logged in!");
+
+      const username = response.user.username;
+
+      toast.success(`Welcome ${username}!`);
 
       const token = response.token;
+      const role = response.user.role;
 
       setCookie("marketPlaceToken", token, {
         path: "/",
       });
+
+      setCookie("marketPlaceRole", role);
 
       return { token: response.token, user: response.user };
     } catch (err) {
