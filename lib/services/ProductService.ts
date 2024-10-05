@@ -2,7 +2,6 @@ import {
   AddProductResponse,
   GetUserProductsResponse,
   Product,
-  ProductAdminResponse,
 } from "@/types/Product.interface";
 import { getCookie } from "cookies-next";
 

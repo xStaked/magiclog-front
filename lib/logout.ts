@@ -10,5 +10,5 @@ export const deleteCookieApp = () =>
 export function LogOut(router: AppRouterInstance) {
   deleteCookieApp();
   persistor.purge();
-  router.push("?page=1&limit=12");
+  router.push("/");
 }
