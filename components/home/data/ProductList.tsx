@@ -32,34 +32,42 @@ export default function ProductList({ products, isLoading }: ProductListProps) {
   console.log("Search Filter:", searchFilter);
   console.log("Price Range:", priceRange);
 
-  const filteredProducts = products.filter(
+  // Filtro por nombre o SKU
+  const filteredByNameOrSKU = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
-      (product.sku.toLowerCase().includes(searchFilter.toLowerCase()) &&
-        product.price >= priceRange[0] &&
-        product.price <= priceRange[1])
+      product.sku.toLowerCase().includes(searchFilter.toLowerCase())
+  );
+
+  const filteredProducts = filteredByNameOrSKU.filter(
+    (product) =>
+      product.price >= priceRange[0] && product.price <= priceRange[1]
   );
 
   console.log("filteredProducts", filteredProducts);
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {!isLoading ? (
-        filteredProducts.map((product) => (
-          <Card key={product.id}>
-            <CardHeader>
-              <CardTitle>{product.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>SKU: {product.sku}</p>
-              <p className="text-2xl font-bold mt-2">
-                ${product.price.toFixed(2)}
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full">Add to Cart</Button>
-            </CardFooter>
-          </Card>
-        ))
+        filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <Card key={product.id}>
+              <CardHeader>
+                <CardTitle>{product.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>SKU: {product.sku}</p>
+                <p className="text-2xl font-bold mt-2">
+                  ${product.price.toFixed(2)}
+                </p>
+              </CardContent>
+              <CardFooter>
+                <Button className="w-full">Add to Cart</Button>
+              </CardFooter>
+            </Card>
+          ))
+        ) : (
+          <p>No products found</p>
+        )
       ) : (
         <ProductSkeleton />
       )}
