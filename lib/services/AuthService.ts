@@ -1,10 +1,10 @@
-import { ValidateSession } from "@/types/Auth.interface";
+import { LoginResponse, ValidateSession } from "@/types/Auth.interface";
 import { HttpError } from "@/types/HttpError.interface";
 import { RegisterResponse } from "@/types/Register-response.interface";
 import { getCookie } from "cookies-next";
 
 export interface IAuthService {
-  login(email: string, password: string): Promise<string>;
+  login(email: string, password: string): Promise<LoginResponse>;
   register(
     username: string,
     email: string,
@@ -14,7 +14,7 @@ export interface IAuthService {
 }
 
 export class AuthService implements IAuthService {
-  async login(email: string, password: string): Promise<string> {
+  async login(email: string, password: string): Promise<LoginResponse> {
     try {
       const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
@@ -25,11 +25,13 @@ export class AuthService implements IAuthService {
       });
 
       if (!response.ok) {
+        console.log(response)
         throw new Error(response.statusText);
       }
 
       const data = await response.json();
-      return data.token.token;
+      console.log("data", data);
+      return data.result;
     } catch (error) {
       if (!(error as HttpError).message) {
         const authError: HttpError = {

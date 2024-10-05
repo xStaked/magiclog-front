@@ -16,12 +16,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { registerSchema } from "@/lib/schemas/register.schema";
-import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { register } from "@/store/slices/AuthSlice";
 
-export default function RegisterForm() {
-  const { handleRegister, isLoading } = useAuth();
-  const router = useRouter();
+interface Iprops {
+  handleOpen: () => void;
+}
+
+export default function RegisterForm({ handleOpen }: Iprops) {
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -35,9 +42,14 @@ export default function RegisterForm() {
 
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
     try {
-      console.log(values);
-      await handleRegister(values.username, values.email, values.password);
-      router.push("/seller/inventory");
+      await dispatch(
+        register({
+          username: values.username,
+          email: values.email,
+          password: values.password,
+        })
+      );
+      if (isAuthenticated) handleOpen();
     } catch (err) {
       console.log(err);
     }

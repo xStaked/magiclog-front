@@ -9,12 +9,28 @@ import {
 } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { closeLoginDialog, openLoginDialog } from "@/store/slices/AuthSlice";
 
 export function LoginDialog() {
-  const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
+  const { isLoginDialogOpen } = useSelector((state: RootState) => state.auth);
+
+  const handleClose = () => {
+    dispatch(closeLoginDialog());
+  };
+
+  const handleOpen = () => {
+    if (isLoginDialogOpen) {
+      dispatch(closeLoginDialog());
+    } else {
+      dispatch(openLoginDialog());
+    }
+  };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isLoginDialogOpen} onOpenChange={handleOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" className="text-[0.8rem] text-black">
           Sign In
@@ -38,7 +54,7 @@ export function LoginDialog() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <LoginForm />
+              <LoginForm setOpen={handleClose} />
             </CardContent>
           </Card>
 

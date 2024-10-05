@@ -1,13 +1,18 @@
 export interface ValidateSession {
-    status:  string;
-    message: string;
-    user:    User;
+  status: string;
+  message: string;
+  user: User;
 }
 
 export interface User {
-    id:        number;
-    email:     string;
-    username:  string;
-    role:      string;
-    createdAt: Date;
+  id: number;
+  email: string;
+  username: string;
+  role: string;
+  createdAt?: Date;
+}
+
+export interface LoginResponse {
+  token: string;
+  user: User;
 }

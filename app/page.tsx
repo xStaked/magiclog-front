@@ -13,6 +13,9 @@ const ProductList = React.lazy(
   () => import("@/components/home/data/ProductList")
 );
 
+const defaultPage = 1;
+const defaultLimit = 12;
+
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, products, totalPages } = useSelector(
@@ -22,10 +25,6 @@ export default function Home() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const defaultPage = 0;
-  const defaultLimit = 12;
-
-  // Obtener los parámetros limit y page de la URL (o establecer valores predeterminados)
   const currentPage = parseInt(searchParams.get("page") || "1");
   const limit = parseInt(searchParams.get("limit") || "12");
 
@@ -34,11 +33,8 @@ export default function Home() {
 
     if (!paramsInUrl) {
       console.log("no params");
-      // Redirigir a la URL con los parámetros por defecto
       router.replace(`/?page=${defaultPage}&limit=${defaultLimit}`);
     } else {
-      console.log("limit", limit);
-      // Hacer fetch cuando los parámetros están en la URL
       const fetchUserProducts = (limit: number, page: number) => {
         const offset = (page - 1) * limit;
         console.log("offset", offset);

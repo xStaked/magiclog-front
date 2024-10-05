@@ -21,7 +21,7 @@ export const useAuth = () => {
       setCookie("marketPlaceToken", token, {
         path: "/",
       });
-      toast.success("Successfully logged in!");
+      toast.success("User has been register successfully!");
     } catch (err) {
       const authError = err as HttpError;
       toast.error(authError.message);

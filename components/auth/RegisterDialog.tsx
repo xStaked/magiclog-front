@@ -8,12 +8,31 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import {
+  closeLoginDialog,
+  openRegisterDialog,
+  closeRegisterDialog,
+} from "@/store/slices/AuthSlice";
 
 export function RegisterDialog() {
-  const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
+  const { isRegisterDialogOpen } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  const handleOpen = () => {
+    if (isRegisterDialogOpen) {
+      dispatch(closeLoginDialog());
+      dispatch(closeRegisterDialog());
+    } else {
+      dispatch(openRegisterDialog());
+    }
+  };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isRegisterDialogOpen} onOpenChange={handleOpen}>
       <DialogTrigger asChild>
         <p className="text-xs underline cursor-pointer">
           If you don&apos;t have an account yet, register here.
@@ -37,7 +56,7 @@ export function RegisterDialog() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <RegisterForm />
+              <RegisterForm handleOpen={handleOpen} />
             </CardContent>
           </Card>
 

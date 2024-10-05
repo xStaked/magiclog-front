@@ -17,12 +17,22 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { loginSchema } from "@/lib/schemas/login.schema";
-import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { RegisterDialog } from "./RegisterDialog";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "@/store/slices/AuthSlice";
+import { AppDispatch, RootState } from "@/store/store";
 
-export default function Component() {
-  const { handleLogin, isLoading } = useAuth();
+interface Iprops {
+  setOpen: () => void;
+}
+
+export default function Component({ setOpen }: Iprops) {
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
+
   const router = useRouter();
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -35,10 +45,10 @@ export default function Component() {
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
-      console.log(values);
-      await handleLogin(values.email, values.password);
+      await dispatch(login({ email: values.email, password: values.password }));
 
-      router.push("/seller/inventory");
+      if (isAuthenticated) setOpen();
+      // router.push("/seller/inventory");
     } catch (err) {
       console.log(err);
     }
