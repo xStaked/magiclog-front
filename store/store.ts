@@ -8,9 +8,9 @@ import authReducer from "./slices/AuthSlice";
 import CartReducer from "./slices/CartSlice";
 
 const persistConfig = {
-  key: "auth",
+  key: "store",
   storage, // Usa localStorage para persistir
-  whitelist: ["auth"], // Solo persiste el slice de autenticación
+  whitelist: ["auth", "cart"], // Solo persiste el slice de autenticación
 };
 
 const rootReducer = combineReducers({

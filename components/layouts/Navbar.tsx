@@ -1,3 +1,4 @@
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LoginDialog } from "../auth/LoginDialog";
 import DropdownUser from "../common/dropdown-user";
@@ -5,7 +6,7 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { User } from "@/types/Auth.interface";
 
-const Navbar = () => {
+export default function Navbar() {
   const { user, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
@@ -34,6 +35,4 @@ const Navbar = () => {
       </div>
     </nav>
   );
-};
-
-export default Navbar;
+}

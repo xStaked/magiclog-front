@@ -1,6 +1,6 @@
 import { Product } from "@/types/Product.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import toast from "react-hot-toast";
 
 interface CartState {
   items: Product[];
@@ -20,15 +20,18 @@ const cartSlice = createSlice({
       );
       if (existingProduct) {
         existingProduct.quantity += action.payload.quantity;
+        toast.success("Product added to your cart successfully!");
       } else {
         state.items.push(action.payload);
       }
     },
     removeFromCart: (state, action: PayloadAction<number>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
+      toast.error("Product removed from your cart.");
     },
     clearCart: (state) => {
       state.items = [];
+      toast.error("Products removed from your cart.");
     },
   },
 });

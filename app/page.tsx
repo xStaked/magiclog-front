@@ -8,6 +8,7 @@ import Navbar from "@/components/layouts/Navbar";
 import FilterSection from "@/components/home/data/FilterSection";
 import { TablePagination } from "@/components/common/TablePagination";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 
 const ProductList = React.lazy(
   () => import("@/components/home/data/ProductList")
@@ -54,7 +55,12 @@ export default function Home() {
       <Navbar />
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full">
         <div className="container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-8">Open Market Products</h1>
+          <div className="flex justify-between">
+            <h1 className="text-3xl font-bold mb-8"> Marketplace Products</h1>
+            <Link href="/cart">
+              <span className=" underline ">Go to cart</span>
+            </Link>
+          </div>
           <FilterSection />
           <Suspense>
             <ProductList products={products} isLoading={isLoading} />
