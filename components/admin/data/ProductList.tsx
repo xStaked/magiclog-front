@@ -15,7 +15,7 @@ export default function ProductList({ products, isLoading }: ProductListProps) {
     (state: RootState) => state.product
   );
 
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = products?.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
       product.sku.includes(searchFilter);
@@ -33,9 +33,7 @@ export default function ProductList({ products, isLoading }: ProductListProps) {
           <Card key={product.id} className="overflow-hidden">
             <CardContent className="p-4">
               <h3 className="font-semibold mb-2">{product.name}</h3>
-              <p className="text-sm text-gray-700 mb-2">
-                SKU: {product.sku}
-              </p>
+              <p className="text-sm text-gray-700 mb-2">SKU: {product.sku}</p>
               <p className="text-sm text-gray-600 mb-2">
                 Seller: {product.container.user.username}
               </p>

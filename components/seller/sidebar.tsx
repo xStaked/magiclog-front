@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { LayoutDashboard, Package, ShoppingCart, Menu } from 'lucide-react'
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { LayoutDashboard, Package, ShoppingCart, Menu } from "lucide-react";
 
 const sidebarItems = [
-  { name: 'Dashboard', href: '/seller/dashboard', icon: LayoutDashboard },
-  { name: 'Orders', href: '/seller/orders', icon: ShoppingCart },
-  { name: 'Inventory', href: '/seller/inventory', icon: Package },
-]
+  { name: "Dashboard", href: "/seller/dashboard", icon: LayoutDashboard },
+  { name: "Orders", href: "/seller/orders", icon: ShoppingCart },
+  { name: "Inventory", href: "/seller/inventory", icon: Package },
+];
 
 export function Sidebar() {
-  const [open, setOpen] = useState(false)
-  const pathname = usePathname()
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -34,14 +34,14 @@ export function Sidebar() {
         <SidebarContent pathname={pathname} />
       </div>
     </Sheet>
-  )
+  );
 }
 
 function SidebarContent({ pathname }: { pathname: string }) {
   return (
     <div className="flex h-full flex-col border-r bg-background">
       <div className="p-4">
-        <h2 className="text-lg font-semibold">Open Market</h2>
+        <h2 className="text-lg font-semibold"> Seller</h2>
       </div>
       <ScrollArea className="flex-1">
         <nav className="flex flex-col gap-2 p-4">
@@ -51,8 +51,8 @@ function SidebarContent({ pathname }: { pathname: string }) {
               href={item.href}
               className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
                 pathname === item.href
-                  ? 'bg-secondary text-secondary-foreground'
-                  : 'text-muted-foreground hover:bg-secondary hover:text-secondary-foreground'
+                  ? "bg-secondary text-secondary-foreground"
+                  : "text-muted-foreground hover:bg-secondary hover:text-secondary-foreground"
               }`}
             >
               <item.icon className="h-4 w-4" />
@@ -62,5 +62,5 @@ function SidebarContent({ pathname }: { pathname: string }) {
         </nav>
       </ScrollArea>
     </div>
-  )
+  );
 }

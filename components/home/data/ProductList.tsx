@@ -28,11 +28,6 @@ export default function ProductList({ products, isLoading }: ProductListProps) {
     (state: RootState) => state.product
   );
 
-  console.log("Products:", products);
-  console.log("Search Filter:", searchFilter);
-  console.log("Price Range:", priceRange);
-
-  // Filtro por nombre o SKU
   const filteredByNameOrSKU = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
@@ -44,7 +39,6 @@ export default function ProductList({ products, isLoading }: ProductListProps) {
       product.price >= priceRange[0] && product.price <= priceRange[1]
   );
 
-  console.log("filteredProducts", filteredProducts);
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {!isLoading ? (

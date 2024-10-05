@@ -7,20 +7,18 @@ export const metadata: Metadata = {
   description: "Your marketplace for everything",
 };
 
-export default async function DashboardLayout({
+export default async function SellerLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="flex flex-col h-screen overflow-hidden">
+      <div className="flex flex-col h-screen overflow-hidden">
         <Navbar />
         <div className="flex flex-1 overflow-hidden">
           <Sidebar />
           <main className="flex-1 overflow-y-auto p-8">{children}</main>
         </div>
-      </body>
-    </html>
+      </div>
   );
 }

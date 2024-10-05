@@ -3,7 +3,6 @@ import { ProductService } from "@/lib/services/ProductService";
 import {
   GetUserProductsResponse,
   Product,
-  ProductAdminResponse,
 } from "@/types/Product.interface";
 import { HttpError } from "@/types/HttpError.interface";
 import toast from "react-hot-toast";
@@ -56,6 +55,8 @@ export const getUserProducts = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const response: GetUserProductsResponse =
         await productService.getSellerProducts(limit, offset);
       return response;
@@ -74,6 +75,8 @@ export const getAllProducts = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const response: GetUserProductsResponse =
         await productService.getAllProducts(limit, offset);
       return response;
@@ -92,9 +95,9 @@ export const getAdminProducts = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response: ProductAdminResponse =
+      const response: GetUserProductsResponse =
         await productService.getAdminProducts(limit, offset);
-      return response.result;
+      return response;
     } catch (err) {
       const productError = err as HttpError;
       toast.error(productError.message);
@@ -138,9 +141,11 @@ const productSlice = createSlice({
     });
     builder.addCase(
       getUserProducts.fulfilled,
-      (state, action: PayloadAction<Product[]>) => {
+      (state, action: PayloadAction<GetUserProductsResponse>) => {
         state.isLoading = false;
-        state.products = action.payload;
+        state.totalPages = action.payload.result.totalPages;
+        state.totalProducts = action.payload.result.totalProducts;
+        state.products = action.payload.result.products;
       }
     );
     builder.addCase(getUserProducts.rejected, (state) => {
@@ -169,10 +174,12 @@ const productSlice = createSlice({
     });
     builder.addCase(
       getAdminProducts.fulfilled,
-      (state, action: PayloadAction<Product[]>) => {
+      (state, action: PayloadAction<GetUserProductsResponse>) => {
         state.isLoading = false;
-
-        state.products = action.payload;
+        console.log("payload", action.payload);
+        state.totalPages = action.payload.result.totalPages;
+        state.totalProducts = action.payload.result.totalProducts;
+        state.products = action.payload.result.products;
       }
     );
     builder.addCase(getAdminProducts.rejected, (state) => {

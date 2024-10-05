@@ -19,7 +19,7 @@ export interface IProductService {
   getAdminProducts(
     offset: number,
     limit: number
-  ): Promise<ProductAdminResponse>;
+  ): Promise<GetUserProductsResponse>;
 }
 
 export class ProductService implements IProductService {
@@ -66,6 +66,8 @@ export class ProductService implements IProductService {
   ): Promise<GetUserProductsResponse> {
     try {
       const token = getCookie("marketPlaceToken");
+      // await new Promise(resolve => setTimeout(resolve, 10000));
+
 
       const response = await fetch(
         `http://localhost:3000/products/user?limit=${limit}&offset=${offset}`,
@@ -122,7 +124,7 @@ export class ProductService implements IProductService {
   async getAdminProducts(
     offset: number,
     limit: number
-  ): Promise<ProductAdminResponse> {
+  ): Promise<GetUserProductsResponse> {
     try {
       // await new Promise(resolve => setTimeout(resolve, 2000));
       const token = getCookie("marketPlaceToken");

@@ -5,10 +5,7 @@ const CACHE_DURATION_MS = 600000;
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("marketPlaceToken")?.value;
-  const cachedRole = request.cookies.get("userRole")?.value;
-  const cachedTimestamp = request.cookies.get("roleCacheTimestamp")?.value;
-console.log('cached role', cachedRole)
-  const now = Date.now();
+
 
   // Verificar si hay rol en la caché y si no ha expirado
   // if (
@@ -72,6 +69,7 @@ console.log('cached role', cachedRole)
 
   // Si no hay token y el usuario intenta acceder a /seller
   if (!token && request.nextUrl.pathname.startsWith("/seller")) {
+    console.log('entrando aca')
     return NextResponse.redirect(new URL("/", request.url));
   }
 }

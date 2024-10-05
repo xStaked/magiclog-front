@@ -3,6 +3,7 @@ import { AuthService } from "@/lib/services/AuthService";
 import { HttpError } from "@/types/HttpError.interface";
 import { User } from "@/types/Auth.interface";
 import toast from "react-hot-toast";
+import { setCookie } from "cookies-next";
 
 // Estado inicial
 interface AuthState {
@@ -40,6 +41,12 @@ export const login = createAsyncThunk(
       );
       toast.success("Successfully logged in!");
 
+      const token = response.token;
+
+      setCookie("marketPlaceToken", token, {
+        path: "/",
+      });
+
       return { token: response.token, user: response.user };
     } catch (err) {
       const authError = err as HttpError;
@@ -62,6 +69,12 @@ export const register = createAsyncThunk(
         credentials.password
       );
       toast.success("User has been register successfully!");
+
+      const token = response.token;
+
+      setCookie("marketPlaceToken", token, {
+        path: "/",
+      });
 
       return { token: response.token, user: response.user };
     } catch (err) {

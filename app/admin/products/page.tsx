@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { getAdminProducts } from "@/store/slices/ProductSlice";
@@ -14,19 +14,49 @@ import { SearchFilter } from "@/components/admin/search-filter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Filter } from "lucide-react";
+import { TablePagination } from "@/components/common/TablePagination";
+import { useRouter, useSearchParams } from "next/navigation";
+
+const defaultPage = 1;
+const defaultLimit = 10;
 
 export default function AdminProductManagement() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, products } = useSelector(
+  const { isLoading, products, totalPages } = useSelector(
     (state: RootState) => state.product
   );
   const { sellers } = useSelector((state: RootState) => state.users);
 
-  useEffect(() => {
-    dispatch(getAdminProducts({ limit: 0, offset: 10 }));
-    dispatch(getSellers());
-  }, [dispatch]);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const currentPage = parseInt(searchParams.get("page") || "1");
+  const limit = parseInt(searchParams.get("limit") || "12");
+
+  React.useEffect(() => {
+    const paramsInUrl = searchParams.has("page") && searchParams.has("limit");
+
+    if (!paramsInUrl) {
+      console.log("no params");
+      router.replace(
+        `/admin/products?page=${defaultPage}&limit=${defaultLimit}`
+      );
+    } else {
+      const fetchUserProducts = (limit: number, page: number) => {
+        const offset = (page - 1) * limit;
+        console.log("offset", offset);
+        dispatch(getAdminProducts({ offset: defaultLimit, limit: offset }));
+        dispatch(getSellers());
+      };
+
+      fetchUserProducts(limit, currentPage);
+    }
+  }, [dispatch, currentPage, limit, router, searchParams]);
+
+  const handlePageChange = (newPage: number) => {
+    router.push(`/admin/products?page=${newPage}&limit=${limit}`);
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -55,6 +85,11 @@ export default function AdminProductManagement() {
           <ProductList
             products={products as AdminProduct[]}
             isLoading={isLoading}
+          />
+          <TablePagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            setCurrentPage={handlePageChange}
           />
         </div>
       </section>
