@@ -8,5 +8,5 @@ export const deleteCookieApp = () =>
 
 export function LogOut(router: AppRouterInstance) {
   deleteCookieApp();
-  router.push("/auth/login");
+  router.push("/");
 }

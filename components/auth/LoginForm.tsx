@@ -17,9 +17,9 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { loginSchema } from "@/lib/schemas/login.schema";
-import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { RegisterDialog } from "./RegisterDialog";
 
 export default function Component() {
   const { handleLogin, isLoading } = useAuth();
@@ -34,9 +34,14 @@ export default function Component() {
   });
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-    console.log(values);
-    await handleLogin(values.email, values.password);
-    router.push("/seller/inventory");
+    try {
+      console.log(values);
+      await handleLogin(values.email, values.password);
+
+      router.push("/seller/inventory");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -79,11 +84,9 @@ export default function Component() {
           )}
         </Button>
       </form>
-      <Link href={"/auth/register"} className="!mt-5 block mx-auto w-fit">
-        <p className="text-xs underline">
-          If you don&apos;t have an account yet, register here.
-        </p>
-      </Link>
+      <div className="!mt-5 block mx-auto w-fit">
+        <RegisterDialog />
+      </div>
     </Form>
   );
 }

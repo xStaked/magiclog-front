@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LoginDialog } from "../auth/LoginDialog";
 
 const Navbar = () => {
   return (
@@ -10,16 +10,13 @@ const Navbar = () => {
             <span className="text-2xl font-bold text-primary">Marketplace</span>
           </div>
           <div className="flex-shrink-0">
-            <Link
-              href={"/auth/login"}
-              className="flex gap-2 items-center"
-            >
+            <div className="flex gap-2 items-center">
               <Avatar>
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <span className="text-[0.8rem] text-black"> Sign In </span>
-            </Link>
+              <LoginDialog />
+            </div>
           </div>
         </div>
       </div>

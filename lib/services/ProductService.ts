@@ -2,6 +2,7 @@ import {
   AddProductResponse,
   GetUserProductsResponse,
   Product,
+  ProductAdminResponse,
 } from "@/types/Product.interface";
 import { getCookie } from "cookies-next";
 
@@ -15,6 +16,10 @@ export interface IProductService {
     offset: number,
     limit: number
   ): Promise<GetUserProductsResponse>;
+  getAdminProducts(
+    offset: number,
+    limit: number
+  ): Promise<ProductAdminResponse>;
 }
 
 export class ProductService implements IProductService {
@@ -98,6 +103,37 @@ export class ProductService implements IProductService {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const products = await response.json();
+      console.log("data", products);
+      return products;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getAdminProducts(
+    offset: number,
+    limit: number
+  ): Promise<ProductAdminResponse> {
+    try {
+      // await new Promise(resolve => setTimeout(resolve, 2000));
+      const token = getCookie("marketPlaceToken");
+
+      const response = await fetch(
+        `http://localhost:3000/products/admin?limit=${limit}&offset=${offset}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

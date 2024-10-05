@@ -1,15 +1,21 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { ProductService } from "@/lib/services/ProductService";
-import { GetUserProductsResponse, Product } from "@/types/Product.interface";
+import {
+  GetUserProductsResponse,
+  Product,
+  ProductAdminResponse,
+} from "@/types/Product.interface";
 import { HttpError } from "@/types/HttpError.interface";
 import toast from "react-hot-toast";
+import { AdminProduct } from "../../types/Product.interface";
 
 interface ProductState {
   isLoading: boolean;
-  products: Product[];
+  products: (Product | AdminProduct)[];
   error: string | null;
   searchFilter: string;
   priceRange: number[];
+  selectedSeller: number | null;
 }
 
 const initialState: ProductState = {
@@ -18,6 +24,7 @@ const initialState: ProductState = {
   error: null,
   searchFilter: "",
   priceRange: [0, 10000],
+  selectedSeller: null,
 };
 
 const productService = new ProductService();
@@ -57,7 +64,7 @@ export const getUserProducts = createAsyncThunk(
 );
 
 export const getAllProducts = createAsyncThunk(
-  "http://localhost:3001/product/getAllProducts",
+  "product/getAllProducts",
   async (
     { limit, offset }: { limit: number; offset: number },
     { rejectWithValue }
@@ -74,15 +81,39 @@ export const getAllProducts = createAsyncThunk(
   }
 );
 
+export const getAdminProducts = createAsyncThunk(
+  "product/admin/getAllProducts",
+  async (
+    { limit, offset }: { limit: number; offset: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response: ProductAdminResponse =
+        await productService.getAdminProducts(limit, offset);
+      return response.result;
+    } catch (err) {
+      const productError = err as HttpError;
+      toast.error(productError.message);
+      return rejectWithValue(productError.message);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
+    setProducts: (state, action: PayloadAction<Product[]>) => {
+      state.products = action.payload;
+    },
     setSearchFilter: (state, action: PayloadAction<string>) => {
       state.searchFilter = action.payload;
     },
     setPriceRange: (state, action: PayloadAction<number[]>) => {
       state.priceRange = action.payload;
+    },
+    setSelectedSeller: (state, action: PayloadAction<number | null>) => {
+      state.selectedSeller = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -126,9 +157,28 @@ const productSlice = createSlice({
     builder.addCase(getAllProducts.rejected, (state) => {
       state.isLoading = false;
     });
+
+    builder.addCase(getAdminProducts.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(
+      getAdminProducts.fulfilled,
+      (state, action: PayloadAction<Product[]>) => {
+        state.isLoading = false;
+        state.products = action.payload;
+      }
+    );
+    builder.addCase(getAdminProducts.rejected, (state) => {
+      state.isLoading = false;
+    });
   },
 });
 
-export const { setSearchFilter, setPriceRange } = productSlice.actions;
+export const {
+  setProducts,
+  setSearchFilter,
+  setPriceRange,
+  setSelectedSeller,
+} = productSlice.actions;
 
 export default productSlice.reducer;

@@ -52,14 +52,28 @@ export const useAuth = () => {
       const authError = err as HttpError;
       toast.error(authError.message);
       // setError(authError);
+      throw new Error(authError.message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const validateSession = async () => {
+    try {
+      const response = await authService.validateSession();
+
+      console.log("response", response);
+
+      return response;
+    } catch (err) {
+      console.log(err);
     }
   };
 
   return {
     handleLogin,
     handleRegister,
+    validateSession,
     isLoading,
   };
 };

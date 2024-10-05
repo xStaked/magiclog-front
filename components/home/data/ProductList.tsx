@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ProductSkeleton from "@/store/slices/ProductSkeleton";
+import ProductSkeleton from "./ProductSkeleton";
 
 interface Product {
   id: number;

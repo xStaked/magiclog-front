@@ -15,7 +15,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import { registerSchema } from "@/lib/schemas/register.schema";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
@@ -35,9 +34,13 @@ export default function RegisterForm() {
   });
 
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
-    console.log(values);
-    await handleRegister(values.username, values.email, values.password);
-    router.push("/seller/inventory");
+    try {
+      console.log(values);
+      await handleRegister(values.username, values.email, values.password);
+      router.push("/seller/inventory");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -106,9 +109,6 @@ export default function RegisterForm() {
           )}
         </Button>
       </form>
-      <Link href="/auth/login" className="!mt-5 block mx-auto w-fit">
-        <p className="text-xs underline">Already have an account? Sign in</p>
-      </Link>
     </Form>
   );
 }
