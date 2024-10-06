@@ -1,7 +1,5 @@
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
 
 const usePaginationAndFetch = (
   fetchProducts: (offset: number, limit: number) => void,
@@ -12,7 +10,6 @@ const usePaginationAndFetch = (
 ) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
 
   const currentPage = parseInt(
     searchParams.get("page") || defaultPage.toString()
