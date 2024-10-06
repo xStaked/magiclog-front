@@ -16,6 +16,7 @@ import { Product } from "@/types/Product.interface";
 import { motion } from "framer-motion";
 import { containerVariants, itemVariants } from "@/lib/constants";
 import { filterProducts } from "@/lib/filterProducts";
+import { getAllProducts, getMatchProducts } from "@/store/slices/ProductSlice";
 
 interface ProductListProps {
   products: Product[];
@@ -37,6 +38,16 @@ export default function HomeProductList({
     priceRange,
     selectedSellers
   );
+
+  React.useEffect(() => {
+    if (filteredProducts.length < 1) {
+      if (searchFilter.length > 0) {
+        dispatch(getMatchProducts({ query: searchFilter }));
+      } else {
+        dispatch(getAllProducts({ offset: 0, limit: 12 }));
+      }
+    }
+  }, [filteredProducts.length, searchFilter, dispatch]);
 
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart({ ...product, quantity: 1 }));

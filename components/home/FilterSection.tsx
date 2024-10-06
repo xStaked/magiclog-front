@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { setSearchFilter, setPriceRange } from "@/store/slices/ProductSlice";
+import { useDebounce } from "use-debounce";
 
 export default function FilterSection() {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,8 +15,15 @@ export default function FilterSection() {
     (state: RootState) => state.product
   );
 
+  const [inputValue, setInputValue] = useState(searchFilter);
+  const [debouncedSearchFilter] = useDebounce(inputValue, 300);
+  console.log(inputValue)
+  useEffect(() => {
+    dispatch(setSearchFilter(debouncedSearchFilter));
+  }, [debouncedSearchFilter, dispatch]);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setSearchFilter(e.target.value));
+    setInputValue(e.target.value);
   };
 
   const handlePriceRangeChange = (value: number[]) => {
@@ -29,7 +37,7 @@ export default function FilterSection() {
         <Input
           id="name-filter"
           placeholder="Enter product name or SKU"
-          value={searchFilter}
+          value={inputValue}
           onChange={handleSearchChange}
         />
       </div>

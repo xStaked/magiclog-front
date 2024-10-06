@@ -20,6 +20,7 @@ export interface IProductService {
     offset: number,
     limit: number
   ): Promise<GetUserProductsResponse>;
+  getMatchProdutcs(query: string): Promise<GetUserProductsResponse>;
 }
 
 export class ProductService implements IProductService {
@@ -82,6 +83,20 @@ export class ProductService implements IProductService {
     try {
       return await httpService.get<GetUserProductsResponse>(
         `/products/admin?limit=${limit}&offset=${offset}`,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getMatchProdutcs(query: string): Promise<GetUserProductsResponse> {
+    const token = getCookie("marketPlaceToken");
+    try {
+      return await httpService.get<GetUserProductsResponse>(
+        `/products/match?name=${query}`,
         {
           Authorization: `Bearer ${token}`,
         }

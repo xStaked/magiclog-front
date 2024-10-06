@@ -4,11 +4,13 @@ function filterByNameOrSKU(
   products: (Product | AdminProduct)[],
   searchFilter: string
 ): (Product | AdminProduct)[] {
-  return products.filter(
+  const filteredProducts = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
       product.sku.toLowerCase().includes(searchFilter.toLowerCase())
   );
+
+  return filteredProducts;
 }
 
 function filterByPrice(

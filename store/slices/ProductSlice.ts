@@ -100,6 +100,21 @@ export const getAdminProducts = createAsyncThunk(
   }
 );
 
+export const getMatchProducts = createAsyncThunk(
+  "product/match",
+  async ({ query }: { query: string }, { rejectWithValue }) => {
+    try {
+      const response: GetUserProductsResponse =
+        await productService.getMatchProdutcs(query);
+      return response;
+    } catch (err) {
+      const productError = err as HttpError;
+      toast.error(productError.message);
+      return rejectWithValue(productError.message);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "product",
   initialState,
@@ -181,7 +196,21 @@ const productSlice = createSlice({
         state.products = action.payload.result.products;
       }
     );
-    builder.addCase(getAdminProducts.rejected, (state) => {
+
+    builder.addCase(getMatchProducts.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(
+      getMatchProducts.fulfilled,
+      (state, action: PayloadAction<GetUserProductsResponse>) => {
+        state.isLoading = false;
+        console.log("payload", action.payload);
+        state.totalPages = action.payload.result.totalPages;
+        state.totalProducts = action.payload.result.totalProducts;
+        state.products = action.payload.result.products;
+      }
+    );
+    builder.addCase(getMatchProducts.rejected, (state) => {
       state.isLoading = false;
     });
   },

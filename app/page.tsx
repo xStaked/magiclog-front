@@ -16,7 +16,7 @@ const HomeProductList = React.lazy(
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, products, totalPages } = useSelector(
+  const { isLoading, products, totalPages, searchFilter } = useSelector(
     (state: RootState) => state.product
   );
 
@@ -29,6 +29,12 @@ export default function Home() {
     undefined,
     "/"
   );
+
+  React.useEffect(() => {
+    if (!searchFilter) {
+      fetchUserProducts((currentPage - 1) * 12, 12);
+    }
+  }, [searchFilter]);
 
   return (
     <div>
