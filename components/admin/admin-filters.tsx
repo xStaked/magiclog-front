@@ -26,10 +26,6 @@ export function AdminFilters({ sellers }: AdminFiltersProps) {
   const handleSellerChange = (sellerId: number, checked: boolean) => {
     setSelectedSellers((prev) => ({ ...prev, [sellerId]: checked }));
 
-    
-
-  
-
     dispatch(setSelectedSeller(sellerId));
   };
 

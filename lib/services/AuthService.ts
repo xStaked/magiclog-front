@@ -2,7 +2,7 @@ import { LoginResponse, ValidateSession } from "@/types/Auth.interface";
 import { HttpError } from "@/types/HttpError.interface";
 import { RegisterResponse } from "@/types/Register-response.interface";
 import { getCookie } from "cookies-next";
-import { API_URL } from "../constants";
+import { httpService } from "./HttpService";
 
 export interface IAuthService {
   login(email: string, password: string): Promise<LoginResponse>;
@@ -17,23 +17,12 @@ export interface IAuthService {
 export class AuthService implements IAuthService {
   async login(email: string, password: string): Promise<LoginResponse> {
     try {
-      // BACKEND_URL
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await httpService.post<
+        LoginResponse,
+        { email: string; password: string }
+      >("/auth/login", { email, password });
 
-      if (!response.ok) {
-        console.log(response);
-        throw new Error(response.statusText);
-      }
-
-      const data = await response.json();
-      console.log("data", data);
-      return data.result;
+      return response;
     } catch (error) {
       if (!(error as HttpError).message) {
         const authError: HttpError = {
@@ -45,23 +34,18 @@ export class AuthService implements IAuthService {
     }
   }
 
-  async register(username: string, email: string, password: string) {
+  async register(
+    username: string,
+    email: string,
+    password: string
+  ): Promise<RegisterResponse> {
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
+      const response = await httpService.post<
+        RegisterResponse,
+        { username: string; email: string; password: string }
+      >("/auth/register", { username, email, password });
 
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-
-      const data = await response.json();
-      console.log("data", data);
-      return data;
+      return response; // Devuelve el objeto de respuesta completo según lo que necesites
     } catch (error) {
       if (!(error as HttpError).message) {
         const authError: HttpError = {
@@ -77,17 +61,14 @@ export class AuthService implements IAuthService {
     try {
       const token = getCookie("marketPlaceToken");
 
-      const response = await fetch(`${API_URL}/auth/validate`, {
-        headers: {
+      const response = await httpService.get<ValidateSession>(
+        "/auth/validate",
+        {
           Authorization: `Bearer ${token}`,
-        },
-      });
+        }
+      );
 
-      const user = await response.json();
-
-      console.log("user", user);
-
-      return user;
+      return response;
     } catch (error) {
       if (!(error as HttpError).message) {
         const authError: HttpError = {

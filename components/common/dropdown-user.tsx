@@ -23,13 +23,13 @@ interface IProps {
 }
 
 const DropdownUser = ({ user }: IProps) => {
-
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSignOut = async () => {
     LogOut();
     dispatch(logout());
   };
+
 
   return (
     <DropdownMenu>
@@ -53,14 +53,19 @@ const DropdownUser = ({ user }: IProps) => {
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel> Marketplace</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Link href={"/seller/inventory?skip=0&limit=12"}>
-          <DropdownMenuItem>Inventory</DropdownMenuItem>
-        </Link>
+        {user?.role === "ADMIN" ? (
+          <Link href={"/admin/products?skip=0&limit=12"}>
+            <DropdownMenuItem>Products</DropdownMenuItem>
+          </Link>
+        ) : (
+          <Link href={"/seller/inventory?skip=0&limit=12"}>
+            <DropdownMenuItem>Inventory</DropdownMenuItem>
+          </Link>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>
           Log out
-          {/* <DropdownMenuShortcut>⇧Q</DropdownMenuShortcut> */}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -1,19 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { LogOut } from "@/lib/logout";
+
+import DropdownUser from "../common/dropdown-user";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { User } from "@/types/Auth.interface";
 
 export function Navbar() {
-
-  const handleLogout = async () => LogOut();
+  const { user } = useSelector((state: RootState) => state.auth);
 
   return (
     <nav className="bg-background border-b">
@@ -25,19 +20,7 @@ export function Navbar() {
             </Link>
           </div>
           <div className="ml-4 flex items-center md:ml-6">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <User className="h-5 w-5" />
-                  <span className="sr-only">Open user menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onSelect={handleLogout}>
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <DropdownUser user={user as User} />
           </div>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { User } from "./Auth.interface";
+
 export interface RegisterResponse {
   status: string;
   message: string;
@@ -6,4 +8,5 @@ export interface RegisterResponse {
 
 export interface Result {
   token: string;
+  user: User;
 }

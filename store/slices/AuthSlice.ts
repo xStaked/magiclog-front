@@ -40,12 +40,12 @@ export const login = createAsyncThunk(
         credentials.password
       );
 
-      const username = response.user.username;
+      const username = response.result.user.username;
 
       toast.success(`Welcome ${username}!`);
 
-      const token = response.token;
-      const role = response.user.role;
+      const token = response.result.token;
+      const role = response.result.user.role;
 
       setCookie("marketPlaceToken", token, {
         path: "/",
@@ -53,7 +53,7 @@ export const login = createAsyncThunk(
 
       setCookie("marketPlaceRole", role);
 
-      return { token: response.token, user: response.user };
+      return { token: response.result.token, user: response.result.user };
     } catch (err) {
       const authError = err as HttpError;
       toast.error(authError.message);
@@ -75,16 +75,21 @@ export const register = createAsyncThunk(
         credentials.password
       );
       toast.success("User has been register successfully!");
-
-      const token = response.token;
+      console.log("response", response);
+      const token = response.result.token;
 
       setCookie("marketPlaceToken", token, {
         path: "/",
       });
 
-      return { token: response.token, user: response.user };
+      const role = response.result.user.role;
+
+      setCookie("marketPlaceRole", role);
+
+      return { token: response.result.token, user: response.result.user };
     } catch (err) {
       const authError = err as HttpError;
+      console.log(authError.message);
       toast.error(authError.message);
       return rejectWithValue(authError.message);
     }

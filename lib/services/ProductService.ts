@@ -4,7 +4,7 @@ import {
   Product,
 } from "@/types/Product.interface";
 import { getCookie } from "cookies-next";
-import { API_URL } from "../constants";
+import { httpService } from "./HttpService";
 
 export interface IProductService {
   addProduct(product: Product): Promise<AddProductResponse>;
@@ -24,38 +24,20 @@ export interface IProductService {
 
 export class ProductService implements IProductService {
   async addProduct(product: Product): Promise<AddProductResponse> {
+    const token = getCookie("marketPlaceToken");
+
+    const data = {
+      name: product.name,
+      sku: product.sku,
+      price: product.price,
+      quantity: product.quantity,
+    };
+
     try {
-      const token = getCookie("marketPlaceToken");
-      console.log("token cookie", token);
-
-      const response = await fetch(`${API_URL}/products`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          name: product.name,
-          sku: product.sku,
-          price: product.price,
-          quantity: product.quantity,
-        }),
+      return await httpService.post<AddProductResponse>("/products", data, {
+        Authorization: `Bearer ${token}`,
       });
-
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-
-      const data = await response.json();
-      console.log("data", data);
-      return data;
     } catch (error) {
-      // if (!(error as AuthError).message) {
-      //   const authError: AuthError = {
-      //     message: "An unexpected error occurred",
-      //   };
-      //   throw authError;
-      // }
       throw error;
     }
   }
@@ -64,30 +46,17 @@ export class ProductService implements IProductService {
     offset: number,
     limit: number
   ): Promise<GetUserProductsResponse> {
-    try {
-      const token = getCookie("marketPlaceToken");
-      // await new Promise(resolve => setTimeout(resolve, 10000));
+    const token = getCookie("marketPlaceToken");
 
-      const response = await fetch(
-        `${API_URL}/products/user?limit=${limit}&offset=${offset}`,
+    try {
+      return await httpService.get<GetUserProductsResponse>(
+        `/products/user?limit=${limit}&offset=${offset}`,
         {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          Authorization: `Bearer ${token}`,
         }
       );
-
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-
-      const products = await response.json();
-      console.log("data", products);
-      return products;
-    } catch (err) {
-      throw err;
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -96,27 +65,11 @@ export class ProductService implements IProductService {
     limit: number
   ): Promise<GetUserProductsResponse> {
     try {
-      // await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const response = await fetch(
-        `${API_URL}/products?limit=${limit}&offset=${offset}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      return await httpService.get<GetUserProductsResponse>(
+        `/products?limit=${limit}&offset=${offset}`
       );
-
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-
-      const products = await response.json();
-      console.log("data", products);
-      return products;
-    } catch (err) {
-      throw err;
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -124,30 +77,17 @@ export class ProductService implements IProductService {
     offset: number,
     limit: number
   ): Promise<GetUserProductsResponse> {
-    try {
-      // await new Promise(resolve => setTimeout(resolve, 2000));
-      const token = getCookie("marketPlaceToken");
+    const token = getCookie("marketPlaceToken");
 
-      const response = await fetch(
-        `${API_URL}/products/admin?limit=${limit}&offset=${offset}`,
+    try {
+      return await httpService.get<GetUserProductsResponse>(
+        `/products/admin?limit=${limit}&offset=${offset}`,
         {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          Authorization: `Bearer ${token}`,
         }
       );
-
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-
-      const products = await response.json();
-      console.log("data", products);
-      return products;
-    } catch (err) {
-      throw err;
+    } catch (error) {
+      throw error;
     }
   }
 }

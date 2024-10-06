@@ -13,6 +13,8 @@ export interface User {
 }
 
 export interface LoginResponse {
-  token: string;
-  user: User;
+  result: {
+    token: string;
+    user: User;
+  };
 }

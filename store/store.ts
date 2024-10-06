@@ -2,7 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import productReducer from "./slices/ProductSlice";
 import usersReducer from "./slices/usersSlice";
-import storage from "redux-persist/lib/storage"; // Esto utiliza localStorage por defecto
+import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import authReducer from "./slices/AuthSlice";
 import CartReducer from "./slices/CartSlice";
@@ -26,7 +26,7 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // Evita los errores de serialización causados por redux-persist
+      serializableCheck: false,
     }),
 });
 
