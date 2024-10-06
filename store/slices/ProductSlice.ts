@@ -13,7 +13,7 @@ interface ProductState {
   error: string | null;
   searchFilter: string;
   priceRange: number[];
-  selectedSeller: number | null;
+  selectedSellers: number[];
 }
 
 const initialState: ProductState = {
@@ -24,7 +24,7 @@ const initialState: ProductState = {
   error: null,
   searchFilter: "",
   priceRange: [0, 10000],
-  selectedSeller: null,
+  selectedSellers: [],
 };
 
 const productService = new ProductService();
@@ -113,12 +113,19 @@ const productSlice = createSlice({
     setPriceRange: (state, action: PayloadAction<number[]>) => {
       state.priceRange = action.payload;
     },
-    setSelectedSeller: (state, action: PayloadAction<number | null>) => {
-      state.selectedSeller = action.payload;
+    setSelectedSeller: (state, action: PayloadAction<number>) => {
+      const sellerId = action.payload;
+
+      if (state.selectedSellers.includes(sellerId)) {
+        state.selectedSellers = state.selectedSellers.filter(
+          (id) => id !== sellerId
+        );
+      } else {
+        state.selectedSellers.push(sellerId);
+      }
     },
   },
   extraReducers: (builder) => {
-    // Crear producto
     builder.addCase(createProduct.pending, (state) => {
       state.isLoading = true;
     });
@@ -129,7 +136,6 @@ const productSlice = createSlice({
       state.isLoading = false;
     });
 
-    // Obtener productos del usuario
     builder.addCase(getUserProducts.pending, (state) => {
       state.isLoading = true;
     });
@@ -146,7 +152,6 @@ const productSlice = createSlice({
       state.isLoading = false;
     });
 
-    // Obtener todos los productos
     builder.addCase(getAllProducts.pending, (state) => {
       state.isLoading = true;
     });

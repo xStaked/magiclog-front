@@ -1,18 +1,17 @@
 "use client";
 
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { getAllProducts } from "@/store/slices/ProductSlice";
 import Navbar from "@/components/layouts/Navbar";
-import FilterSection from "@/components/home/data/FilterSection";
+import FilterSection from "@/components/home/FilterSection";
 import { TablePagination } from "@/components/common/TablePagination";
-import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import usePaginationAndFetch from "@/hooks/usePagination";
 
-const ProductList = React.lazy(
-  () => import("@/components/home/data/ProductList")
+const HomeProductList = React.lazy(
+  () => import("@/components/home/HomeProductList")
 );
 
 export default function Home() {
@@ -28,7 +27,7 @@ export default function Home() {
   const { currentPage, handlePageChange } = usePaginationAndFetch(
     fetchUserProducts,
     undefined,
-    "/seller/inventory"
+    "/"
   );
 
   return (
@@ -48,7 +47,7 @@ export default function Home() {
           <FilterSection />
 
           <Suspense>
-            <ProductList products={products} isLoading={isLoading} />
+            <HomeProductList products={products} isLoading={isLoading} />
             <TablePagination
               currentPage={currentPage}
               setCurrentPage={handlePageChange}

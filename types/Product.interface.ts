@@ -11,6 +11,7 @@ export interface Product {
   quantity: number;
   price: number;
   containerId: number;
+  container?: Container;
 }
 export interface GetUserProductsResponse {
   staus: number;

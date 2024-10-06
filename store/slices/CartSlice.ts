@@ -22,6 +22,7 @@ const cartSlice = createSlice({
         existingProduct.quantity += action.payload.quantity;
         toast.success("Product added to your cart successfully!");
       } else {
+        toast.success("Product added to your cart successfully!");
         state.items.push(action.payload);
       }
     },

@@ -10,34 +10,32 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductSkeleton from "./ProductSkeleton";
-import { addToCart, selectCartItems } from "@/store/slices/CartSlice";
+import { addToCart } from "@/store/slices/CartSlice";
 import { Product } from "@/types/Product.interface";
 
 import { motion } from "framer-motion";
 import { containerVariants, itemVariants } from "@/lib/constants";
+import { filterProducts } from "@/lib/filterProducts";
 
 interface ProductListProps {
   products: Product[];
   isLoading: boolean;
 }
 
-export default function ProductList({ products, isLoading }: ProductListProps) {
+export default function HomeProductList({
+  products,
+  isLoading,
+}: ProductListProps) {
   const dispatch = useDispatch<AppDispatch>();
-  const { searchFilter, priceRange } = useSelector(
+  const { searchFilter, priceRange, selectedSellers } = useSelector(
     (state: RootState) => state.product
   );
 
-  const cartItems = useSelector(selectCartItems);
-
-  const filteredByNameOrSKU = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
-      product.sku.toLowerCase().includes(searchFilter.toLowerCase())
-  );
-
-  const filteredProducts = filteredByNameOrSKU.filter(
-    (product) =>
-      product.price >= priceRange[0] && product.price <= priceRange[1]
+  const filteredProducts = filterProducts(
+    products,
+    searchFilter,
+    priceRange,
+    selectedSellers
   );
 
   const handleAddToCart = (product: Product) => {
@@ -55,7 +53,7 @@ export default function ProductList({ products, isLoading }: ProductListProps) {
         filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <motion.div key={product.id} variants={itemVariants}>
-              <Card >
+              <Card>
                 <CardHeader>
                   <CardTitle>{product.name}</CardTitle>
                 </CardHeader>

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { getAdminProducts } from "@/store/slices/ProductSlice";
 
-import ProductList from "@/components/admin/data/ProductList";
+import ProductList from "@/components/admin/ProductList";
 import { AdminProduct } from "@/types/Product.interface";
 import { getSellers } from "@/store/slices/usersSlice";
 import { AdminFilters } from "@/components/admin/admin-filters";

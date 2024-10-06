@@ -1,5 +1,5 @@
 "use client";
-import { AddProductModal } from "@/components/seller/inventory/addProduct";
+import { AddProductModal } from "@/components/seller/addProduct";
 import React, { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
@@ -9,7 +9,7 @@ import SearchFilter from "@/components/seller/SearchFIlter";
 import usePaginationAndFetch from "@/hooks/usePagination";
 
 const ProductTable = React.lazy(
-  () => import("@/components/seller/inventory/DataTable")
+  () => import("@/components/seller/DataTable")
 );
 
 export default function Page() {

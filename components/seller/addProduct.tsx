@@ -27,13 +27,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { createProduct } from "@/store/slices/ProductSlice";
 import { Product } from "@/types/Product.interface";
-
-const productSchema = z.object({
-  name: z.string().min(1, "Product name is required"),
-  sku: z.string().min(1, "SKU is required"),
-  quantity: z.number().int().positive("Quantity must be a positive integer"),
-  price: z.number().positive("Price must be a positive number"),
-});
+import { productSchema } from "@/lib/schemas/addProduct.schema";
 
 type ProductFormValues = z.infer<typeof productSchema>;
 

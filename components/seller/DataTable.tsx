@@ -12,7 +12,7 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import DataTableSkeleton from "./data-table-skeleton";
 import { motion } from "framer-motion";
-import { containerVariants, itemVariants } from "@/lib/constants";
+import { containerVariants } from "@/lib/constants";
 
 interface Product {
   id: number;
