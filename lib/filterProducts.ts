@@ -34,7 +34,6 @@ function filterBySellers(
   );
 }
 
-// Combinar los filtros según el contexto
 export function filterProducts(
   products: (Product | AdminProduct)[],
   searchFilter: string,
@@ -44,7 +43,6 @@ export function filterProducts(
   let filteredProducts = filterByNameOrSKU(products, searchFilter);
   filteredProducts = filterByPrice(filteredProducts, priceRange);
 
-  // Solo aplicar filtro de sellers si hay alguno seleccionado
   if (selectedSellers.length > 0) {
     filteredProducts = filterBySellers(filteredProducts, selectedSellers);
   }
