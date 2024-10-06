@@ -51,9 +51,8 @@ export default function Home() {
   };
 
   return (
-    <section className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div>
       <Navbar />
-
       <section className="min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <div className="container mx-auto">
           <div className="container mx-auto px-4 py-8">
@@ -66,6 +65,7 @@ export default function Home() {
           </div>
 
           <FilterSection />
+
           <Suspense>
             <ProductList products={products} isLoading={isLoading} />
             <TablePagination
@@ -76,6 +76,6 @@ export default function Home() {
           </Suspense>
         </div>
       </section>
-    </section>
+    </div>
   );
 }

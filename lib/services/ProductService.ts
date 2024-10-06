@@ -129,7 +129,7 @@ export class ProductService implements IProductService {
       const token = getCookie("marketPlaceToken");
 
       const response = await fetch(
-        `${API_URL}/admin?limit=${limit}&offset=${offset}`,
+        `${API_URL}/products/admin?limit=${limit}&offset=${offset}`,
         {
           method: "GET",
           headers: {

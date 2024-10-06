@@ -11,6 +11,8 @@ import {
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import DataTableSkeleton from "./data-table-skeleton";
+import { motion } from "framer-motion";
+import { containerVariants, itemVariants } from "@/lib/constants";
 
 interface Product {
   id: number;
@@ -29,9 +31,7 @@ export default function ProductTable({
   products,
   isLoading,
 }: ProductListProps) {
-  const { searchFilter } = useSelector(
-    (state: RootState) => state.product
-  );
+  const { searchFilter } = useSelector((state: RootState) => state.product);
 
   const filteredProducts = products.filter((product) => {
     const matchesSearchFilter =
@@ -43,34 +43,36 @@ export default function ProductTable({
 
   return (
     <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>SKU</TableHead>
-            <TableHead>Quantity</TableHead>
-            <TableHead>Price</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {!isLoading ? (
-            filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell>{product.sku}</TableCell>
-                  <TableCell>{product.quantity}</TableCell>
-                  <TableCell>${product.price.toFixed(2)}</TableCell>
-                </TableRow>
-              ))
+      <motion.div variants={containerVariants}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>SKU</TableHead>
+              <TableHead>Quantity</TableHead>
+              <TableHead>Price</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {!isLoading ? (
+              filteredProducts.length > 0 ? (
+                filteredProducts.map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>{product.sku}</TableCell>
+                    <TableCell>{product.quantity}</TableCell>
+                    <TableCell>${product.price.toFixed(2)}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <p>No products found</p>
+              )
             ) : (
-              <p>No products found</p>
-            )
-          ) : (
-            <DataTableSkeleton />
-          )}
-        </TableBody>
-      </Table>
+              <DataTableSkeleton />
+            )}
+          </TableBody>
+        </Table>
+      </motion.div>
     </>
   );
 }

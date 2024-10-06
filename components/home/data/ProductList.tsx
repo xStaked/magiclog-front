@@ -13,6 +13,9 @@ import ProductSkeleton from "./ProductSkeleton";
 import { addToCart, selectCartItems } from "@/store/slices/CartSlice";
 import { Product } from "@/types/Product.interface";
 
+import { motion } from "framer-motion";
+import { containerVariants, itemVariants } from "@/lib/constants";
+
 interface ProductListProps {
   products: Product[];
   isLoading: boolean;
@@ -40,31 +43,38 @@ export default function ProductList({ products, isLoading }: ProductListProps) {
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart({ ...product, quantity: 1 }));
   };
-  console.log("cartItems", cartItems);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <motion.div
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       {!isLoading ? (
         filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-            <Card key={product.id}>
-              <CardHeader>
-                <CardTitle>{product.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>SKU: {product.sku}</p>
-                <p className="text-2xl font-bold mt-2">
-                  ${product.price.toFixed(2)}
-                </p>
-              </CardContent>
-              <CardFooter>
-                <Button
-                  className="w-full"
-                  onClick={() => handleAddToCart(product)}
-                >
-                  Add to Cart
-                </Button>
-              </CardFooter>
-            </Card>
+            <motion.div key={product.id} variants={itemVariants}>
+              <Card >
+                <CardHeader>
+                  <CardTitle>{product.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>SKU: {product.sku}</p>
+                  <p className="text-2xl font-bold mt-2">
+                    ${product.price.toFixed(2)}
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Button
+                    className="w-full"
+                    onClick={() => handleAddToCart(product)}
+                  >
+                    Add to Cart
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
           ))
         ) : (
           <p>No products found</p>
@@ -72,6 +82,6 @@ export default function ProductList({ products, isLoading }: ProductListProps) {
       ) : (
         <ProductSkeleton />
       )}
-    </div>
+    </motion.div>
   );
 }
