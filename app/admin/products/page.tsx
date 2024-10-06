@@ -15,10 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Filter } from "lucide-react";
 import { TablePagination } from "@/components/common/TablePagination";
-import { useRouter, useSearchParams } from "next/navigation";
-
-const defaultPage = 1;
-const defaultLimit = 10;
+import usePaginationAndFetch from "@/hooks/usePagination";
 
 export default function AdminProductManagement() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -28,35 +25,15 @@ export default function AdminProductManagement() {
   );
   const { sellers } = useSelector((state: RootState) => state.users);
 
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const currentPage = parseInt(searchParams.get("page") || "1");
-  const limit = parseInt(searchParams.get("limit") || "12");
-
-  React.useEffect(() => {
-    const paramsInUrl = searchParams.has("page") && searchParams.has("limit");
-
-    if (!paramsInUrl) {
-      console.log("no params");
-      router.replace(
-        `/admin/products?page=${defaultPage}&limit=${defaultLimit}`
-      );
-    } else {
-      const fetchUserProducts = (limit: number, page: number) => {
-        const offset = (page - 1) * limit;
-        console.log("offset", offset);
-        dispatch(getAdminProducts({ offset: defaultLimit, limit: offset }));
-        dispatch(getSellers());
-      };
-
-      fetchUserProducts(limit, currentPage);
-    }
-  }, [dispatch, currentPage, limit, router, searchParams]);
-
-  const handlePageChange = (newPage: number) => {
-    router.push(`/admin/products?page=${newPage}&limit=${limit}`);
+  const fetchProducts = (offset: number, limit: number) => {
+    dispatch(getAdminProducts({ offset, limit }));
   };
+
+  const { currentPage, handlePageChange } = usePaginationAndFetch(
+    fetchProducts,
+    () => dispatch(getSellers()),
+    "/admin/products"
+  );
 
   return (
     <div className="flex h-screen overflow-hidden">

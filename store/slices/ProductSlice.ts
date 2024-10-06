@@ -47,14 +47,12 @@ export const createProduct = createAsyncThunk(
 export const getUserProducts = createAsyncThunk(
   "product/getUserProducts",
   async (
-    { limit, offset }: { limit: number; offset: number },
+    { offset, limit }: { limit: number; offset: number },
     { rejectWithValue }
   ) => {
     try {
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
-
       const response: GetUserProductsResponse =
-        await productService.getSellerProducts(limit, offset);
+        await productService.getSellerProducts(offset, limit);
       return response;
     } catch (err) {
       const productError = err as HttpError;
@@ -67,14 +65,14 @@ export const getUserProducts = createAsyncThunk(
 export const getAllProducts = createAsyncThunk(
   "product/getAllProducts",
   async (
-    { limit, offset }: { limit: number; offset: number },
+    { offset, limit }: { limit: number; offset: number },
     { rejectWithValue }
   ) => {
     try {
       // await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const response: GetUserProductsResponse =
-        await productService.getAllProducts(limit, offset);
+        await productService.getAllProducts(offset, limit);
       return response;
     } catch (err) {
       const productError = err as HttpError;
@@ -87,12 +85,12 @@ export const getAllProducts = createAsyncThunk(
 export const getAdminProducts = createAsyncThunk(
   "product/admin/getAllProducts",
   async (
-    { limit, offset }: { limit: number; offset: number },
+    { offset, limit }: { limit: number; offset: number },
     { rejectWithValue }
   ) => {
     try {
       const response: GetUserProductsResponse =
-        await productService.getAdminProducts(limit, offset);
+        await productService.getAdminProducts(offset, limit);
       return response;
     } catch (err) {
       const productError = err as HttpError;
