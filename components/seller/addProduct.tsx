@@ -25,9 +25,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { createProduct } from "@/store/slices/ProductSlice";
+import { createProduct, getUserProducts } from "@/store/slices/ProductSlice";
 import { Product } from "@/types/Product.interface";
 import { productSchema } from "@/lib/schemas/addProduct.schema";
+import { useSearchParams } from "next/navigation";
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
@@ -39,6 +40,8 @@ export function AddProductModal({ isLoading }: AddProductModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
+
+  const searchParams = useSearchParams();
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -55,6 +58,14 @@ export function AddProductModal({ isLoading }: AddProductModalProps) {
       const data = await dispatch(createProduct(values as Product));
 
       if (data.meta.requestStatus !== "rejected") {
+        const defaultLimit = 12;
+
+        const limit = parseInt(
+          searchParams.get("limit") || defaultLimit.toString()
+        );
+        const offset = (1 - 1) * limit;
+
+        await dispatch(getUserProducts({ offset, limit }));
         form.reset();
         setIsOpen(false);
       }
