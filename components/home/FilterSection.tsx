@@ -17,7 +17,6 @@ export default function FilterSection() {
 
   const [inputValue, setInputValue] = useState(searchFilter);
   const [debouncedSearchFilter] = useDebounce(inputValue, 300);
-  console.log(inputValue)
   useEffect(() => {
     dispatch(setSearchFilter(debouncedSearchFilter));
   }, [debouncedSearchFilter, dispatch]);

@@ -105,6 +105,8 @@ export const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
+      state.isLoginDialogOpen = false;
+      state.isRegisterDialogOpen = false;
     },
     openLoginDialog: (state) => {
       state.isLoginDialogOpen = true;

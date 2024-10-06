@@ -30,7 +30,6 @@ const DropdownUser = ({ user }: IProps) => {
     dispatch(logout());
   };
 
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -54,19 +53,29 @@ const DropdownUser = ({ user }: IProps) => {
         <DropdownMenuLabel> Marketplace</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {user?.role === "ADMIN" ? (
-          <Link href={"/admin/products?skip=0&limit=12"}>
-            <DropdownMenuItem>Products</DropdownMenuItem>
-          </Link>
+          <>
+            <Link href={"?skip=0&limit=12"}>
+              <DropdownMenuItem>Home</DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
+            <Link href={"/admin/products?skip=0&limit=12"}>
+              <DropdownMenuItem>Products</DropdownMenuItem>
+            </Link>
+          </>
         ) : (
-          <Link href={"/seller/inventory?skip=0&limit=12"}>
-            <DropdownMenuItem>Inventory</DropdownMenuItem>
-          </Link>
+          <>
+            <Link href={"?skip=0&limit=12"}>
+              <DropdownMenuItem>Home</DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
+
+            <Link href={"/seller/inventory?skip=0&limit=12"}>
+              <DropdownMenuItem>Inventory</DropdownMenuItem>
+            </Link>
+          </>
         )}
         <DropdownMenuSeparator />
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleSignOut}>
-          Log out
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleSignOut}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
